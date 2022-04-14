@@ -60,6 +60,7 @@ Joystick stick = new Joystick(1);
    */
   @Override
   public void robotInit() {
+    comp.enableDigital();
   }
 
   /**
@@ -95,24 +96,23 @@ Joystick stick = new Joystick(1);
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    comp.disable();
+  
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drive.tankDrive(Ps4.getRawAxis(1)*0.50, Ps4.getRawAxis(5)*0.50) ;  
+    drive.arcadeDrive(Ps4.getRawAxis(1)*0.50, Ps4.getRawAxis(4)*0.50) ;
+     
     
-  if(Ps4.getRawButton(1)) {                          
-    intake.set(1);
-  }
-  else if(Ps4.getRawButtonReleased(1)){
-    intake.set(0) ; }
-  else if(Ps4.getRawButton(2)){
-    intake.set(-1);}
-  else if(Ps4.getRawButtonReleased(2));{
-    intake.set(0);
-  }  
+  
+   if(Ps4.getRawButton(1)){
+    intake.set(1);}
+    else if(Ps4.getRawButton(9)){
+      intake.set(0);
+    }
+  
+    
 
   if(Ps4.getRawButton(6)){
     leftshooter.set(0.70);
@@ -146,13 +146,13 @@ Joystick stick = new Joystick(1);
   if(stick.getTrigger()){
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
-  else if(stick.getTrigger()){
+  else if(stick.getRawButton(3)){
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
-  if(stick.getRawButton(8)){
+  if(stick.getRawButton(4)){
     comp.enableDigital();
   }
-  else if(stick.getRawButton(9)){
+  else if(stick.getRawButton(5)){
     comp.disable();
   }
   }

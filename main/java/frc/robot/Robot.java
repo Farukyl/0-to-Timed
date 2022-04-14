@@ -154,7 +154,7 @@ Joystick stick = new Joystick(1);
     comp.enableDigital();
   }
   else if(stick.getRawButton(9)){
-    comp.enableDigital();
+    comp.disable();
   }
   }
 

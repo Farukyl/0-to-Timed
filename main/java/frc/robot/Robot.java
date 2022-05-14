@@ -34,26 +34,39 @@ import edu.wpi.first.wpilibj.motorcontrol.Victor;
  */
 public class Robot extends TimedRobot {
 
+
+//Drive Victors  
 Victor frontleft = new Victor(1) ;
 Victor frontright = new Victor(0);
 Victor backleft = new Victor(3);
 Victor backright = new Victor(2);
 
+
+//Main System Victors
 Victor intake = new Victor(4);
-Victor leftshooter = new Victor(5);
-Victor rightshooter = new Victor(6);
+Victor frontshooter = new Victor(5);
+Victor backshooter = new Victor(6);
 Victor feeder = new Victor(7);
 
+
+//Motor Definitions
 MotorControllerGroup leftmotor = new MotorControllerGroup(frontleft, backleft) ;
 MotorControllerGroup rightmotor = new MotorControllerGroup(frontright, backright) ;
 
+//Pneumatics
 Compressor comp = new Compressor(PneumaticsModuleType.CTREPCM) ;
 DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,0,1) ;
 
+
+//Drive Types
 DifferentialDrive drive = new DifferentialDrive(leftmotor, rightmotor);
 
+
+//Autonomous Timer
 Timer timer = new Timer();
 
+
+//Controllers
 Joystick Ps4 = new Joystick(0) ;
 Joystick stick = new Joystick(1);
 
@@ -97,27 +110,37 @@ Joystick stick = new Joystick(1);
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-   if(timer.get()<3){
+   
+  //Autonomous Drive 
+    if(timer.get()<3){
     leftmotor.set(0.20);
     rightmotor.set(0.20);
-     } 
+     }
+     
+     //Autonomous Pneumatics
   else if(timer.get() > 3 && timer.get() < 5){
     comp.enableDigital(); 
     solenoid.set(Value.kReverse);
      }
+
+     //Autonomous İntake & Feeder
   else if(timer.get()>=6 && timer.get()<7){
     intake.set(1);
     feeder.set(-1);
     }
+
+    //Autonomous Shooter
   else if(timer.get()<9 && timer.get()>=7){
-    leftshooter.set(-0.80);
-    rightshooter.set(-1);
+    frontshooter.set(-0.80);
+    backshooter.set(-1);
     }
+
+    //All Autonomous Revers
   else if(timer.get()>10){
     intake.set(0);
     feeder.set(0);
-    leftshooter.set(0);
-    rightshooter.set(0);
+    frontshooter.set(0);
+    backshooter.set(0);
     comp.disable();
     solenoid.set(Value.kForward);
   }
@@ -136,7 +159,7 @@ Joystick stick = new Joystick(1);
     drive.arcadeDrive(- Ps4.getRawAxis(1)*0.60, Ps4.getRawAxis(4)*0.60) ;
      
     
-  
+   //İntake Systems
   if(Ps4.getRawButton(1)){
     intake.set(1);
     } 
@@ -145,6 +168,7 @@ Joystick stick = new Joystick(1);
     intake.set(0);
     }
 
+    //İntake Revers Systems
   else if(Ps4.getRawButton(2)){
     intake.set(-1);
     }
@@ -153,46 +177,60 @@ Joystick stick = new Joystick(1);
     intake.set(0);
   }  
   
-    
-
+  //Shooter Systems
   if(Ps4.getRawButton(6)){
-    leftshooter.set(0.70);
-    rightshooter.set(0.70);  }
+    frontshooter.set(1);
+    backshooter.set(0.70);  }
+
   else if(Ps4.getRawButtonReleased(6)){
-    leftshooter.set(0);
-    rightshooter.set(0);
-  }
-  else if(stick.getRawButton(2)){
-    leftshooter.set(-0.70);
-    rightshooter.set(-0.70);
-  }
-  else if(stick.getRawButtonReleased(2)){
-    leftshooter.set(0);
-    rightshooter.set(0);
+    frontshooter.set(0);
+    backshooter.set(0);
   }
 
-  if(Ps4.getRawButton(3)){
-    feeder.set(0.50);
+  //Shooter Revers Systems
+  else if(stick.getRawButton(2)){
+    frontshooter.set(-1);
+    backshooter.set(-0.70);
   }
+
+  else if(stick.getRawButtonReleased(2)){
+    frontshooter.set(0);
+    backshooter.set(0);
+  }
+
+
+  //Feeder Systems
+  if(Ps4.getRawButton(3)){
+    feeder.set(1);
+  }
+
   else if(Ps4.getRawButtonReleased(3)){
     feeder.set(0);
+  
   }
+
+  //Feeder Revers Systems
   else if(Ps4.getRawButton(4)){
-    feeder.set(-0.50);
+    feeder.set(-1);
   }
+
   else if(Ps4.getRawButtonReleased(4)){
     feeder.set(0);
   }
   
+  //Pneumatic Systems
   if(stick.getTrigger()){
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
+
   else if(stick.getRawButton(3)){
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
+
   if(stick.getRawButton(4)){
     comp.enableDigital();
   }
+
   else if(stick.getRawButton(5)){
     comp.disable();
   }

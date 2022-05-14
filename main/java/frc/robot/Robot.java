@@ -10,10 +10,14 @@ package frc.robot;
 
 
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -37,7 +41,7 @@ public class Robot extends TimedRobot {
 
 //Drive Victors  
 Victor frontleft = new Victor(1) ;
-Victor frontright = new Victor(0);
+Victor frontright = new Victor(5);
 Victor backleft = new Victor(3);
 Victor backright = new Victor(2);
 
@@ -45,7 +49,7 @@ Victor backright = new Victor(2);
 //Main System Victors
 Victor intake = new Victor(4);
 Victor frontshooter = new Victor(5);
-Victor backshooter = new Victor(6);
+Victor rearshooter = new Victor(6);
 Victor feeder = new Victor(7);
 
 
@@ -66,6 +70,18 @@ DifferentialDrive drive = new DifferentialDrive(leftmotor, rightmotor);
 Timer timer = new Timer();
 
 
+//Encoder Definitions
+Encoder encoderFrontShooter = new Encoder (1, 2);
+Encoder encoderRearShooter = new Encoder (3, 4);
+Encoder encoderRight = new Encoder (5, 6);
+Encoder encoderLeft = new Encoder (7, 8);
+
+
+//Navx Definitions
+AHRS navx = new AHRS(SPI.Port.kMXP);
+
+
+
 //Controllers
 Joystick Ps4 = new Joystick(0) ;
 Joystick stick = new Joystick(1);
@@ -79,6 +95,11 @@ Joystick stick = new Joystick(1);
   @Override
   public void robotInit() {
     comp.enableDigital();
+    encoderFrontShooter.reset();
+    encoderRearShooter.reset();
+    encoderRight.reset();
+    encoderLeft.reset();
+    navx.reset();
   }
 
   /**
@@ -89,7 +110,23 @@ Joystick stick = new Joystick(1);
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    encoderFrontShooter.get();
+    System.out.println(encoderFrontShooter.get());
+
+    encoderRearShooter.get();
+    System.out.println(encoderRearShooter.get());
+
+    encoderRight.get();
+    System.out.println(encoderRight.get());
+
+    encoderLeft.get();
+    System.out.println(encoderLeft.get());
+
+    navx.getAngle();
+    System.out.println(navx.getAngle());
+
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -132,7 +169,7 @@ Joystick stick = new Joystick(1);
     //Autonomous Shooter
   else if(timer.get()<9 && timer.get()>=7){
     frontshooter.set(-0.80);
-    backshooter.set(-1);
+    rearshooter.set(-1);
     }
 
     //All Autonomous Revers
@@ -140,7 +177,7 @@ Joystick stick = new Joystick(1);
     intake.set(0);
     feeder.set(0);
     frontshooter.set(0);
-    backshooter.set(0);
+    rearshooter.set(0);
     comp.disable();
     solenoid.set(Value.kForward);
   }
@@ -180,22 +217,22 @@ Joystick stick = new Joystick(1);
   //Shooter Systems
   if(Ps4.getRawButton(6)){
     frontshooter.set(1);
-    backshooter.set(0.70);  }
+    rearshooter.set(0.70);  }
 
   else if(Ps4.getRawButtonReleased(6)){
     frontshooter.set(0);
-    backshooter.set(0);
+    rearshooter.set(0);
   }
 
   //Shooter Revers Systems
   else if(stick.getRawButton(2)){
     frontshooter.set(-1);
-    backshooter.set(-0.70);
+    rearshooter.set(-0.70);
   }
 
   else if(stick.getRawButtonReleased(2)){
     frontshooter.set(0);
-    backshooter.set(0);
+    rearshooter.set(0);
   }
 
 
@@ -218,6 +255,14 @@ Joystick stick = new Joystick(1);
     feeder.set(0);
   }
   
+
+
+
+
+
+
+
+
   //Pneumatic Systems
   if(stick.getTrigger()){
     solenoid.set(DoubleSolenoid.Value.kForward);

@@ -40,17 +40,17 @@ public class Robot extends TimedRobot {
 
 
 //Drive Victors  
-Victor frontleft = new Victor(1) ;
-Victor frontright = new Victor(5);
-Victor backleft = new Victor(3);
+Victor frontleft = new Victor(3) ;
+Victor frontright = new Victor(0);
+Victor backleft = new Victor(4);
 Victor backright = new Victor(2);
 
 
 //Main System Victors
-Victor intake = new Victor(4);
-Victor frontshooter = new Victor(5);
-Victor rearshooter = new Victor(6);
-Victor feeder = new Victor(7);
+Victor intake = new Victor(9);
+Victor frontshooter = new Victor(8);
+Victor rearshooter = new Victor(7);
+Victor feeder = new Victor(6);
 
 
 //Motor Definitions
@@ -217,24 +217,12 @@ Joystick stick = new Joystick(1);
   //Shooter Systems
   if(stick.getRawButton(1)){
     frontshooter.set(1);
-    rearshooter.set(0.70);  }
+    rearshooter.set(-0.70);  }
 
   else if(stick.getRawButtonReleased(1)){
     frontshooter.set(0);
     rearshooter.set(0);
   }
-
-  //Shooter Revers Systems
-  else if(stick.getRawButton(2)){
-    frontshooter.set(-1);
-    rearshooter.set(-0.70);
-  }
-
-  else if(stick.getRawButtonReleased(2)){
-    frontshooter.set(0);
-    rearshooter.set(0);
-  }
-
 
   //Feeder Systems
   if(Ps4.getRawButton(3)){

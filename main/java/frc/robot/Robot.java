@@ -215,11 +215,11 @@ Joystick stick = new Joystick(1);
   }  
   
   //Shooter Systems
-  if(Ps4.getRawButton(6)){
+  if(stick.getRawButton(1)){
     frontshooter.set(1);
     rearshooter.set(0.70);  }
 
-  else if(Ps4.getRawButtonReleased(6)){
+  else if(stick.getRawButtonReleased(1)){
     frontshooter.set(0);
     rearshooter.set(0);
   }
@@ -264,19 +264,19 @@ Joystick stick = new Joystick(1);
 
 
   //Pneumatic Systems
-  if(stick.getTrigger()){
+  if(stick.getRawButton(3)){
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  else if(stick.getRawButton(3)){
+  else if(stick.getRawButton(4)){
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  if(stick.getRawButton(4)){
+  if(stick.getRawButton(5)){
     comp.enableDigital();
   }
 
-  else if(stick.getRawButton(5)){
+  else if(stick.getRawButton(6)){
     comp.disable();
   }
   }
